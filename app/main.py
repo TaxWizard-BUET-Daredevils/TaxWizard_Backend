@@ -90,7 +90,7 @@ async def get_user(user_id: str, auth_id=Depends(auth_handler.auth_wrapper)):
     return {"user": user, "success": True}
 
 
-@app.post("/post_income_details", tags=["Tax Details"])
+@app.post("/income_details", tags=["Tax Details"])
 async def add_tax_details(
     income_input: IncomeInput, auth_id=Depends(auth_handler.auth_wrapper)
 ):
@@ -135,18 +135,6 @@ async def add_tax_details(
         ),
     }
 
-    # tax_details = TaxDetails(
-    #     tax_id=uuid4(),
-    #     user_id=auth_id,
-    #     year=income_input.year,
-    #     income=income_input.income,
-    #     taxable_income=get_taxable_income(income_input.income, gender, age),
-    #     location=income_input.location,
-    #     tax_amount=calculate_final_tax(
-    #         income_input.income, gender, age, income_input.location
-    #     ),
-    # )
-
     tax_details = TaxDetails(**data)
 
     db_session.add(tax_details)
@@ -157,3 +145,17 @@ async def add_tax_details(
         "message": "Tax details added successfully",
         "data": data,
     }
+
+
+@app.get("/tax_details", tags=["Tax Details"])
+async def get_tax_details(auth_id=Depends(auth_handler.auth_wrapper)):
+    tax_details = (
+        db_session.query(TaxDetails)
+        .filter(TaxDetails.user_id == auth_id)
+        .order_by(TaxDetails.year)
+        .all()
+    )
+    if not tax_details:
+        return {"message": "No tax details found", "success": False}
+
+    return {"tax_details": tax_details, "success": True}
