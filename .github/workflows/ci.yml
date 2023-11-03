@@ -6,6 +6,7 @@ on:
       - main
 env:
   AWS_ECR_REPO: 805071309209.dkr.ecr.us-east-1.amazonaws.com/tax-wizard-ecr
+  ECR_REPOSITORY: tax-wizard-ecr # set this to your Amazon ECR repository name
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -24,19 +25,16 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 # Replace with your AWS region
 
       - name: Build Docker Image
         run: |
           docker build -t ${{ env.AWS_ECR_REPO }}:latest .
           docker tag ${{ env.AWS_ECR_REPO }}:latest ${{ steps.login-ecr.outputs.registry }}:latest
-
+          docker images
+          echo
       - name: Push Docker Image to ECR
         run: |
-          docker push ${{ steps.login-ecr.outputs.registry }}:latest
+          docker push ${{ env.AWS_ECR_REPO }}:latest
 
       # - name: Deploy to ECS (Update this step based on your deployment strategy)
       #   run: |
