@@ -1,0 +1,30 @@
+name: Run UnitTest
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  unittest:
+    runs-on: test
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          echo "upgrading pip"
+          python -m pip install --upgrade pip
+          echo "Installing the following packages"
+          cat app/requirements.txt
+          pip install -r app/requirements.txt
+          echo "Installing httpx, pytest, asyncio anyio"
+          pip install httpx==0.23.1 pytest==7.2.0 pytest-asyncio==0.20.2 anyio==3.6.2
+      - name: Test with pytest
+        run: |
+          bash run_dev.sh
