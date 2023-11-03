@@ -7,8 +7,8 @@ on:
 env:
   AWS_ECR_REPO: 805071309209.dkr.ecr.us-east-1.amazonaws.com/tax-wizard-ecr
   ECR_REPOSITORY: tax-wizard-ecr # set this to your Amazon ECR repository name
-  ECS_CLUSTER: your-ecs-cluster
-  ECS_SERVICE: your-ecs-service
+  ECS_CLUSTER: t-w
+  ECS_SERVICE: tw
 
 jobs:
   build-and-deploy:
