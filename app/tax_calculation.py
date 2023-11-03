@@ -33,7 +33,7 @@ def calculate_basic_tax(taxable: int, above_income: int) -> int:
 
 
 def calculate_final_tax(amount: int, gender: str, age: int, location: str) -> int:
-    if location == "major":
+    if location == "dhaka" or location == "chittagong":
         min_amount = 5000
 
     if location == "city":
