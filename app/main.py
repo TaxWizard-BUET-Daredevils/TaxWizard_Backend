@@ -86,3 +86,8 @@ async def get_user(user_id: str, auth_id=Depends(auth_handler.auth_wrapper)):
     user.password = None
 
     return {"user": user, "success": True}
+
+
+@app.post("/tax_details", tags=["Tax Details"])
+async def add_tax_details():
+    pass
