@@ -39,7 +39,7 @@ def get_taxable_income(amount: int, gender: str, age: int) -> int:
         untaxable = 350000
 
     taxable = amount - untaxable
-    return taxable
+    return max(taxable, 0)
 
 
 def get_above_income(amount: int, gender: str, age: int) -> int:
