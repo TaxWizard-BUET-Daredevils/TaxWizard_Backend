@@ -12,11 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Clean Up
-        run: |
-          sudo rm -rf /home/ubuntu/actions-runner/_work/TaxWizard_Backend/TaxWizard_Backend/app/__pycache__/*
-          # You can add more cleanup steps if needed
-
       - name: Docker Compose Setup
         run: |
           sudo apt install docker-compose -y && sudo docker-compose build --no-cache
