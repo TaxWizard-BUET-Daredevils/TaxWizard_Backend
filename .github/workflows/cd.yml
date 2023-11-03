@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  unittest:
+  deploy-test:
     runs-on: test
 
     steps:
@@ -18,13 +18,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          echo "upgrading pip"
-          python -m pip install --upgrade pip
-          echo "Installing the following packages"
-          cat app/requirements.txt
-          pip install -r app/requirements.txt
-          echo "Installing httpx, pytest, asyncio anyio"
-          pip install httpx==0.23.1 pytest==7.2.0 pytest-asyncio==0.20.2 anyio==3.6.2
+          sudo apt install docker-compose -y && sudo docker-compose build --no-cache
       - name: Test with pytest
         run: |
-          bash run_dev.sh
+          sudo docker-compose down -v && sudo docker-compose up -d
