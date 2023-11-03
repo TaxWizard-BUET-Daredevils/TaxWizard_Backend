@@ -25,8 +25,8 @@ jobs:
         echo "Installing the following packages"
         cat app/requirements.txt
         pip install -r app/requirements.txt
-        echo "Installing httpx, pytest, asyncio anyio"
-        pip install httpx==0.23.1 pytest==7.2.0 pytest-asyncio==0.20.2 anyio==3.6.2
+        echo "Installing httpx, pytest, asyncio anyio, requests"
+        pip install httpx==0.23.1 pytest==7.2.0 pytest-asyncio==0.20.2 anyio==3.6.2 requests==2.31.0
     - name: Test with pytest
       run: |
         python -m pytest -s -v 
