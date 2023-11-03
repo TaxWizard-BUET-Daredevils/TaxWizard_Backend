@@ -1,0 +1,25 @@
+name: SonarLint
+
+on:
+  push:
+    branches: [sonarlint]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarlint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: SonarSource/sonarcloud-github-action@v5.10.1
+        with:
+          organization: daredevils
+          token: TaxWizard-BUET-Daredevils_TaxWizard_Backend
+
+      - name: Publish SonarLint report
+        uses: actions/upload-artifact@v3
+        with:
+          name: sonarlint-report.xml
+          path: sonarlint.xml
