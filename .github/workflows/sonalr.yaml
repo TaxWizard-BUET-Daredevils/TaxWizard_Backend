@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: SonarSource/sonarcloud-github-action@v5.10.1
+      - uses: SonarSource/sonarcloud-github-action@master
         with:
           organization: daredevils
           token: TaxWizard-BUET-Daredevils_TaxWizard_Backend
