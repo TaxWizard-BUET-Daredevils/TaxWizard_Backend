@@ -14,8 +14,8 @@ services:
     build: .
     ports:
       - "80:8000"
-    volumes:
-      - .:/app
+    # volumes:
+    #   - .:/app
     environment:
       - DATABASE_URL=postgresql://postgres:pass@db/demo
     # depends_on:
