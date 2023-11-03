@@ -8,9 +8,17 @@ DB_URL = "exampledb.cculi2axzscc.us-east-1.rds.amazonaws.com"
 
 
 def get_db_session():
-    engine = create_engine(
-        f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_URL}:5432/exampledb"
-    )
+    import os
+
+    db_url = os.environ.get("DB_URL")
+    if not db_url:
+        db_url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_URL}:5432/exampledb"
+    print(db_url)
+    engine = create_engine(db_url)
+
+    # engine = create_engine(
+    # f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_URL}:5432/exampledb"
+    # )
     Session = sessionmaker(bind=engine)
     db_session = Session()
     return db_session
