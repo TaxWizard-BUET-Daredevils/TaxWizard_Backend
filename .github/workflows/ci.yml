@@ -3,7 +3,7 @@ name: Build and Deploy to ECR
 on:
   push:
     branches:
-      - cd
+      - main
 env:
   AWS_ECR_REPO: 805071309209.dkr.ecr.us-east-1.amazonaws.com/tax-wizard-ecr
   ECR_REPOSITORY: tax-wizard-ecr # set this to your Amazon ECR repository name
