@@ -1,6 +1,6 @@
 from pydantic import BaseModel, constr
 from sqlalchemy import Column, String, Integer, DateTime
-from datetime import datetime
+from datetime import date
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -16,7 +16,25 @@ class UserInput(BaseModel):
     name: str
     password: str
     gender: constr(regex="male|female")
-    date_of_birth: datetime
+    date_of_birth: date
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "id": "0001",
+                "name": "Dhrubo Kamal",
+                "password": "1234",
+                "gender": "male",
+                "date_of_birth": "1998-01-01",
+            }
+        }
+
+
+class UserOutput(BaseModel):
+    id: str
+    name: str
+    gender: str
+    date_of_birth: date
 
 
 class IncomeInput(BaseModel):
@@ -24,10 +42,27 @@ class IncomeInput(BaseModel):
     income: int
     location: constr(regex="dhaka|chittagong|city|non_city")
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "year": 2023,
+                "income": 1000000,
+                "location": "dhaka",
+            }
+        }
+
 
 class LoginInput(BaseModel):
     id: str
     password: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "id": "0001",
+                "password": "1234",
+            }
+        }
 
 
 # SQL Classes
