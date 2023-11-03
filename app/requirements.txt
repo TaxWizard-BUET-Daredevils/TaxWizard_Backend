@@ -19,3 +19,7 @@ SQLAlchemy==1.4.23
 starlette==0.14.2
 typing_extensions==4.8.0
 uvicorn==0.15.0
+
+# authentication
+passlib==1.7.4
+PyJWT==2.4.0
