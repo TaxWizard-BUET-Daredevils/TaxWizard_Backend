@@ -18,7 +18,7 @@ auth_handler = AuthHandler()
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello, World!", "success": True}
+    return {"message": "Hello, World!", "success111": True}
 
 
 @app.post("/calculate_tax")
