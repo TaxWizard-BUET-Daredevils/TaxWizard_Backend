@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+import logging
 from uuid import uuid4
 from datetime import datetime
 from app.app_models.models import (
@@ -13,6 +14,10 @@ from app.app_models.models import (
 )
 from app.tax_calculation import calculate_final_tax, get_taxable_income
 from app.utils import get_db_session, AuthHandler
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 app = FastAPI()
 
@@ -41,6 +46,9 @@ def calculate_tax(tax_input: CalculateTaxInput):
         gender=tax_input.gender,
         location=tax_input.location,
     )
+    logging.info(
+        f"calculated tax = {tax} for amount = {tax_input.amount}, age={tax_input.age}, gender = {tax_input.gender}, location = {tax_input.location}"
+    )
     return {"tax_amount": tax}
 
 
@@ -49,6 +57,7 @@ async def signup(user: UserInput):
     # check for existing user_id
     existing_user = db_session.query(User).filter(User.id == user.id).first()
     if existing_user:
+        logging.info(f"User already exists with id = {user.id}")
         return {"message": "User already exists", "success": False}
 
     user.password = auth_handler.get_password_hash(user.password)
@@ -70,14 +79,17 @@ async def signup(user: UserInput):
 async def login(credentials: LoginInput):
     user = db_session.query(User).filter(User.id == credentials.id).first()
     if not user:
+        logging.info(f"User not found with id = {credentials.id}")
         return {"message": "User not found", "success": False}
 
     if not auth_handler.verify_password(credentials.password, user.password):
+        logging.info(f"Incorrect password for user with id = {credentials.id}")
         return {
             "message": "Incorrect password",
             "success": False,
         }
 
+    logging.info(f"User logged in with id = {credentials.id}")
     token = auth_handler.encode_token(user.id)
     return {
         "user_id": credentials.id,
@@ -112,6 +124,9 @@ async def add_tax_details(
         .first()
     )
     if tax_details_exists:
+        logging.info(
+            f"Tax details already exists for user with id = {auth_id} and year = {income_input.year}"
+        )
         return {
             "success": False,
             "message": "Tax details already exists for the same year",
@@ -151,6 +166,10 @@ async def add_tax_details(
     db_session.add(tax_details)
     db_session.commit()
 
+    logging.info(
+        f"Tax details added successfully for user with id = {auth_id} and year = {income_input.year}"
+    )
+
     return {
         "success": True,
         "message": "Tax details added successfully",
@@ -167,6 +186,8 @@ async def get_tax_details(auth_id=Depends(auth_handler.auth_wrapper)):
         .all()
     )
     if not tax_details:
+        logging.info(f"No tax details found for user with id = {auth_id}")
         return {"message": "No tax details found", "success": False}
 
+    logging.info(f"Tax details fetched for user with id = {auth_id}")
     return {"tax_details": tax_details, "success": True}
