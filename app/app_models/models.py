@@ -27,6 +27,11 @@ class TaxDetailsModel(BaseModel):
     tax_amount: int
 
 
+class LoginInput(BaseModel):
+    id: str
+    password: str
+
+
 # SQL Classes
 # Create a base class for declarative models
 Base = declarative_base()
