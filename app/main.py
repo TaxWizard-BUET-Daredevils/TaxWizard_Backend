@@ -5,6 +5,7 @@ from app.app_models.models import (
     CalculateTaxInput,
     User,
     UserInput,
+    UserOutput,
     LoginInput,
     IncomeInput,
     TaxDetails,
@@ -84,8 +85,9 @@ async def get_user(user_id: str, auth_id=Depends(auth_handler.auth_wrapper)):
     if not user:
         return {"message": "User not found", "success": False}
 
-    # remove password from response
-    user.password = None
+    user_profile = UserOutput(
+        id=user.id, name=user.name, gender=user.name, date_of_birth=user.date_of_birth
+    )
 
     return {"user": user, "success": True}
 
