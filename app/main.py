@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from uuid import uuid4
 from datetime import datetime
 from app.app_models.models import (
@@ -14,6 +15,14 @@ from app.tax_calculation import calculate_final_tax, get_taxable_income
 from app.utils import get_db_session, AuthHandler
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 db_session = get_db_session()
 auth_handler = AuthHandler()
