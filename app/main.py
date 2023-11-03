@@ -61,7 +61,12 @@ async def login(credentials: LoginInput):
         return {"message": "User not found", "success": False}
 
     if not auth_handler.verify_password(credentials.password, user.password):
-        return {"message": "Incorrect password", "success": False}
+        return {
+            "message": "Incorrect password",
+            "success": False,
+            "credentials.pass": credentials.password,
+            "user.pass": user.password,
+        }
 
     token = auth_handler.encode_token(user.id)
     return {"token": token, "success": True}
