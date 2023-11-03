@@ -1,9 +1,9 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:805071309209:task-definition/tax-w1:1",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:805071309209:task-definition/tax-w1:2",
     "containerDefinitions": [
         {
             "name": "tw1",
-            "image": "805071309209.dkr.ecr.us-east-1.amazonaws.com/tax-wizard-ecr",
+            "image": "805071309209.dkr.ecr.us-east-1.amazonaws.com/tax-wizard-ecr:c1e86fc46aad5dd88882ff08f5bf915047e69000",
             "cpu": 0,
             "portMappings": [
                 {
@@ -14,10 +14,8 @@
             ],
             "essential": true,
             "environment": [],
-            "environmentFiles": [],
             "mountPoints": [],
             "volumesFrom": [],
-            "ulimits": [],
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
@@ -25,8 +23,7 @@
                     "awslogs-group": "/ecs/tax-w1",
                     "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
-                },
-                "secretOptions": []
+                }
             }
         },
         {
@@ -72,7 +69,7 @@
     "taskRoleArn": "arn:aws:iam::805071309209:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::805071309209:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 1,
+    "revision": 2,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -114,8 +111,6 @@
     ],
     "cpu": "1024",
     "memory": "3072",
-
-    "registeredAt": "2023-11-03T12:11:01.602Z",
-    "registeredBy": "arn:aws:iam::805071309209:root",
-    "tags": []
+    "registeredAt": 1699018558.81,
+    "registeredBy": "arn:aws:iam::805071309209:root"
 }
