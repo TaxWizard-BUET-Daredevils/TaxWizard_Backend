@@ -1,0 +1,40 @@
+name: Run UnitTest
+
+on:
+  pull_request:
+    branches: [ main , dev]
+  push:
+    branches: [ main , dev]
+
+jobs:
+  unittest:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: |
+        echo "upgrading pip"
+        python -m pip install --upgrade pip
+        echo "Installing the following packages"
+        cat app/requirements.txt
+        pip install -r app/requirements.txt
+        echo "Installing httpx, flake8, pytest, asyncio anyio"
+        pip install httpx==0.23.1 flake8==6.0.0 pytest==7.2.0 pytest-asyncio==0.20.2 anyio==3.6.2 google-cloud-bigquery==3.6.0
+    
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Test with pytest
+      run: |
+        python -m pytest -s -v 
