@@ -3,13 +3,15 @@ name: Build and Deploy to ECR
 on:
   push:
     branches:
-      - main
+      - cd
 env:
   AWS_ECR_REPO: 805071309209.dkr.ecr.us-east-1.amazonaws.com/tax-wizard-ecr
   ECR_REPOSITORY: tax-wizard-ecr # set this to your Amazon ECR repository name
   ECS_CLUSTER: t-w
   ECS_SERVICE: tw
   ECS_TASK_DEFINITION_FAMILY: tax-w1
+  ECS_TASK_DEFINITION: task-definition.json # set this to the path to your Amazon ECS task definition                                               # file, e.g. .aws/task-definition.json
+  CONTAINER_NAME: tw1
 
 jobs:
   build-and-deploy:
@@ -40,18 +42,18 @@ jobs:
         run: |
           docker push ${{ env.AWS_ECR_REPO }}:latest
 
-      - name: Register a new revision of the task definition
-        run: |
-          aws ecs register-task-definition --family $ECS_TASK_DEFINITION_FAMILY --image ${{ env.AWS_ECR_REPO }}:latest
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
 
-      - name: Fetch Latest Task Definition ARN
-        id: fetch-task-def
-        run: |
-          # Fetch the latest revision of the ECS task definition ARN
-          latest_task_def_arn=$(aws ecs describe-services --cluster $ECS_CLUSTER --services $ECS_SERVICE --query 'services[0].taskDefinition' --output text)
-          echo "::set-output name=latest_task_def_arn::${latest_task_def_arn}"
-
-      - name: Update ECS Service
-        run: |
-          # Update ECS service with the latest task definition
-          aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --task-definition ${{ steps.fetch-task-def.outputs.latest_task_def_arn }}
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
