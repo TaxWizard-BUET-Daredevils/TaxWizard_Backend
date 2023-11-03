@@ -1,5 +1,6 @@
 from pydantic import BaseModel, constr
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, DateTime
+from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -15,16 +16,13 @@ class UserInput(BaseModel):
     name: str
     password: str
     gender: constr(regex="male|female")
-    age: int
+    date_of_birth: datetime
 
 
-class TaxDetailsModel(BaseModel):
-    tax_id: str
-    user_id: str
+class IncomeInput(BaseModel):
     year: int
     income: int
     location: constr(regex="dhaka|chittagong|city|non_city")
-    tax_amount: int
 
 
 class LoginInput(BaseModel):
@@ -45,7 +43,7 @@ class User(Base):
     name = Column(String)
     password = Column(String)
     gender = Column(String)
-    age = Column(Integer)
+    date_of_birth = Column(DateTime)
 
 
 # Define the TaxDetails model

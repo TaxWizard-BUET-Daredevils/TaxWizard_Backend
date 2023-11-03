@@ -1,13 +1,15 @@
 from fastapi import FastAPI, Depends
+from uuid import uuid4
+from datetime import datetime
 from app.app_models.models import (
     CalculateTaxInput,
     User,
     UserInput,
     LoginInput,
-    TaxDetailsModel,
+    IncomeInput,
     TaxDetails,
 )
-from app.tax_calculation import calculate_final_tax
+from app.tax_calculation import calculate_final_tax, get_taxable_income
 from app.utils import get_db_session, AuthHandler
 
 app = FastAPI()
@@ -46,7 +48,7 @@ async def signup(user: UserInput):
         name=user.name,
         password=user.password,
         gender=user.gender,
-        age=user.age,
+        date_of_birth=user.date_of_birth,
     )
     db_session.add(new_user)
     db_session.commit()
@@ -86,3 +88,72 @@ async def get_user(user_id: str, auth_id=Depends(auth_handler.auth_wrapper)):
     user.password = None
 
     return {"user": user, "success": True}
+
+
+@app.post("/post_income_details", tags=["Tax Details"])
+async def add_tax_details(
+    income_input: IncomeInput, auth_id=Depends(auth_handler.auth_wrapper)
+):
+    # check for existing tax details for the same person of the same year
+    tax_details_exists = (
+        db_session.query(TaxDetails)
+        .filter(TaxDetails.user_id == auth_id, TaxDetails.year == income_input.year)
+        .first()
+    )
+    if tax_details_exists:
+        return {
+            "success": False,
+            "message": "Tax details already exists for the same year",
+        }
+
+    # fetch user_details
+    user = db_session.query(User).filter(User.id == auth_id).first()
+    gender = user.gender
+    date_of_birth = user.date_of_birth
+
+    current_date = datetime.now()
+
+    # Calculate the age by subtracting the birthdate from the current date
+    age = (
+        current_date.year
+        - date_of_birth.year
+        - (
+            (current_date.month, current_date.day)
+            < (date_of_birth.month, date_of_birth.day)
+        )
+    )
+
+    data = {
+        "tax_id": uuid4(),
+        "user_id": auth_id,
+        "year": income_input.year,
+        "income": income_input.income,
+        "taxable_income": get_taxable_income(income_input.income, gender, age),
+        "location": income_input.location,
+        "tax_amount": calculate_final_tax(
+            income_input.income, gender, age, income_input.location
+        ),
+    }
+
+    # tax_details = TaxDetails(
+    #     tax_id=uuid4(),
+    #     user_id=auth_id,
+    #     year=income_input.year,
+    #     income=income_input.income,
+    #     taxable_income=get_taxable_income(income_input.income, gender, age),
+    #     location=income_input.location,
+    #     tax_amount=calculate_final_tax(
+    #         income_input.income, gender, age, income_input.location
+    #     ),
+    # )
+
+    tax_details = TaxDetails(**data)
+
+    db_session.add(tax_details)
+    db_session.commit()
+
+    return {
+        "success": True,
+        "message": "Tax details added successfully",
+        "data": data,
+    }
