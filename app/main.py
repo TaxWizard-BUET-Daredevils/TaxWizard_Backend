@@ -75,4 +75,7 @@ async def get_user(user_id: str, auth_id=Depends(auth_handler.auth_wrapper)):
     if not user:
         return {"message": "User not found", "success": False}
 
+    # remove password from response
+    user.password = None
+
     return {"user": user, "success": True}
