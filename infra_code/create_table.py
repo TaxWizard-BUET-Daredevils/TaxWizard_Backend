@@ -37,6 +37,7 @@ class TaxDetails(Base):
     user_id = Column(String)
     year = Column(Integer)
     income = Column(Integer)
+    taxable_income = Column(Integer)
     location = Column(String)
     tax_amount = Column(Integer)
 
@@ -57,6 +58,7 @@ new_tax_details = TaxDetails(
     user_id="1",
     year=2023,
     income=50000,
+    taxable_income=40000,
     location="New York",
     tax_amount=10000,
 )

@@ -68,6 +68,7 @@ async def login(credentials: LoginInput):
 
     token = auth_handler.encode_token(user.id)
     return {
+        "user_id": credentials.id,
         "token": token,
         "success": True,
     }
