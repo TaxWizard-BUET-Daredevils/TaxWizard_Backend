@@ -64,12 +64,13 @@ async def login(credentials: LoginInput):
         return {
             "message": "Incorrect password",
             "success": False,
-            "credentials.pass": credentials.password,
-            "user.pass": user.password,
         }
 
     token = auth_handler.encode_token(user.id)
-    return {"token": token, "success": True}
+    return {
+        "token": token,
+        "success": True,
+    }
 
 
 @app.get("/user/{user_id}", tags=["User Profile"])
