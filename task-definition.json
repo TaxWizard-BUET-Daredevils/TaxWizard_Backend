@@ -13,7 +13,10 @@
                 }
             ],
             "essential": true,
-            "environment": [],
+            "environment": [         {
+                "name": "DB_URL",
+                "value": "postgresql://test:must_be_eight_characters@example-1.cluster-cculi2axzscc.us-east-1.rds.amazonaws.com:5432/test"
+            }],
             "mountPoints": [],
             "volumesFrom": [],
             "logConfiguration": {
