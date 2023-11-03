@@ -32,6 +32,24 @@ def calculate_basic_tax(taxable: int, above_income: int) -> int:
     return int(total_tax)
 
 
+def get_taxable_income(amount: int, gender: str, age: int) -> int:
+    if gender == "female" or age > 65:
+        untaxable = 400000
+    else:
+        untaxable = 350000
+
+    taxable = amount - untaxable
+    return taxable
+
+
+def get_above_income(amount: int, gender: str, age: int) -> int:
+    if gender == "female" or age > 65:
+        above_income = amount - 1700000
+    else:
+        above_income = amount - 1650000
+    return above_income
+
+
 def calculate_final_tax(amount: int, gender: str, age: int, location: str) -> int:
     if location == "dhaka" or location == "chittagong":
         min_amount = 5000
@@ -41,14 +59,8 @@ def calculate_final_tax(amount: int, gender: str, age: int, location: str) -> in
     else:
         min_amount = 3000
 
-    if gender == "female" or age > 65:
-        untaxable = 400000
-        above_income = amount - 1700000
-    else:
-        untaxable = 350000
-        above_income = amount - 1650000
-
-    taxable = amount - untaxable
+    taxable = get_taxable_income(amount, gender, age)
+    above_income = get_above_income(amount, gender, age)
 
     if taxable <= 0:
         return 0

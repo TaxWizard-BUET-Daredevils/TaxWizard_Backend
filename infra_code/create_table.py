@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Integer
+from sqlalchemy import create_engine, Column, String, Integer, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -26,7 +26,7 @@ class User(Base):
     name = Column(String)
     password = Column(String)
     gender = Column(String)
-    age = Column(Integer)
+    date_of_birth = Column(DateTime)
 
 
 # Define the TaxDetails model
@@ -47,7 +47,13 @@ Base.metadata.create_all(engine)
 
 
 # Insert a User record
-new_user = User(id="1", name="John Doe", password="password123", gender="Male", age=30)
+new_user = User(
+    id="1",
+    name="John Doe",
+    password="password123",
+    gender="Male",
+    date_of_birth="1990-01-01",
+)
 session.add(new_user)
 session.commit()
 
@@ -67,7 +73,7 @@ session.commit()
 
 # Get a User record by ID
 user = session.query(User).filter(User.id == "1").first()
-print(f"User Name: {user.name}, Age: {user.age}")
+print(f"User Name: {user.name}, Date of Birth: {user.date_of_birth}")
 
 # Get a TaxDetails record by tax ID
 tax_details = session.query(TaxDetails).filter(TaxDetails.tax_id == "1").first()
