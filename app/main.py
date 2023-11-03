@@ -15,9 +15,7 @@ from app.app_models.models import (
 from app.tax_calculation import calculate_final_tax, get_taxable_income
 from app.utils import get_db_session, AuthHandler
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
 app = FastAPI()
 
@@ -71,7 +69,7 @@ async def signup(user: UserInput):
     )
     db_session.add(new_user)
     db_session.commit()
-
+    logging.info(f"User created successfully with id = {user.id}")
     return {"message": "User created successfully", "success": True}
 
 
@@ -101,15 +99,17 @@ async def login(credentials: LoginInput):
 @app.get("/user/{user_id}", tags=["User Profile"])
 async def get_user(user_id: str, auth_id=Depends(auth_handler.auth_wrapper)):
     if auth_id != user_id:
+        logging.info(f"Unauthorized access for user with id = {user_id}")
         return {"message": "Unauthorized", "success": False}
     user = db_session.query(User).filter(User.id == user_id).first()
     if not user:
+        logging.info(f"User not found with id = {user_id}")
         return {"message": "User not found", "success": False}
 
     user_profile = UserOutput(
         id=user.id, name=user.name, gender=user.name, date_of_birth=user.date_of_birth
     )
-
+    logging.info(f"User profile fetched for user with id = {user_id}")
     return {"user": user, "success": True}
 
 
