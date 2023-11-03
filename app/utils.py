@@ -33,15 +33,15 @@ def calculate_basic_tax(taxable: int, above_income: int) -> int:
 
 
 def calculate_final_tax(amount: int, gender: str, age: int, location: str) -> int:
-    if location.casefold == "major":
+    if location == "major":
         min_amount = 5000
 
-    if location.casefold == "city":
+    if location == "city":
         min_amount = 4000
     else:
         min_amount = 3000
 
-    if gender.casefold == "female" or age > 65:
+    if gender == "female" or age > 65:
         untaxable = 400000
         above_income = amount - 1700000
     else:

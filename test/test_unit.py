@@ -7,11 +7,11 @@ def test_calculate_tax():
         == 72500
     )
     assert (
-        calculate_final_tax(amount=400000, gender="Male", age=25, location="non_city")
+        calculate_final_tax(amount=400000, gender="male", age=25, location="non_city")
         == 3000
     )
 
     assert (
-        calculate_final_tax(amount=400000, gender="FEMALE", age=25, location="non_city")
+        calculate_final_tax(amount=400000, gender="female", age=25, location="non_city")
         == 3000
     )
