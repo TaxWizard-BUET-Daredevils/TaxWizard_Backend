@@ -9,7 +9,7 @@ env:
   ECR_REPOSITORY: tax-wizard-ecr # set this to your Amazon ECR repository name
   ECS_CLUSTER: t-w
   ECS_SERVICE: tw
-  ECS_TASK_DEFINITION: tax-w1 # set this to the path to your Amazon ECS task definition                                             # file, e.g. .aws/task-definition.json
+  ECS_TASK_DEFINITION: tax-w1:1 # set this to the path to your Amazon ECS task definition                                             # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: tw1 # set this to the name of the container in the
 
 jobs:
