@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.app_models.index import CalculateTaxInput
-from app.utils import calculate_final_tax
+from app.tax_calculation import calculate_final_tax
 
 app = FastAPI()
 

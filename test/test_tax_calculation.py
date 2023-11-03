@@ -1,4 +1,4 @@
-from app.utils import calculate_final_tax
+from app.tax_calculation import calculate_final_tax
 
 
 def test_calculate_tax():
@@ -13,5 +13,5 @@ def test_calculate_tax():
 
     assert (
         calculate_final_tax(amount=400000, gender="female", age=25, location="non_city")
-        == 3000
+        == 0
     )

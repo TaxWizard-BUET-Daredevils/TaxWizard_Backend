@@ -2,25 +2,25 @@ def calculate_basic_tax(taxable: int, above_income: int) -> int:
     total_tax = 0
 
     # for the next 100000, the person will pay 5% tax
-    if taxable >= 0:
+    if taxable > 0:
         next_slab = min(taxable, 100000)
         total_tax += next_slab * 0.05
         taxable -= next_slab
 
     # for the next 300000, the person will pay 10% tax
-    if taxable >= 0:
+    if taxable > 0:
         next_slab = min(taxable, 300000)
         total_tax += next_slab * 0.1
         taxable -= next_slab
 
     # for the next 400000, the person will pay 15% tax
-    if taxable >= 0:
+    if taxable > 0:
         next_slab = min(taxable, 400000)
         total_tax += next_slab * 0.15
         taxable -= next_slab
 
     # for the next 500000, the person will pay 20% tax
-    if taxable >= 0:
+    if taxable > 0:
         next_slab = min(taxable, 500000)
         total_tax += next_slab * 0.2
         taxable -= next_slab
@@ -50,7 +50,7 @@ def calculate_final_tax(amount: int, gender: str, age: int, location: str) -> in
 
     taxable = amount - untaxable
 
-    if taxable < 0:
+    if taxable <= 0:
         return 0
 
     else:
