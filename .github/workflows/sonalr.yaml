@@ -3,8 +3,8 @@ name: SonarLint
 on:
   push:
     branches: [sonarlint]
-  # pull_request:
-  #   types: [opened, synchronize, reopened]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   sonarcloud:
@@ -19,8 +19,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      # - name: Publish SonarLint report
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: sonarlint-report.xml
-      #     path: sonarlint.xml
+      - name: Publish SonarLint report
+        uses: actions/upload-artifact@v3
+        with:
+          name: sonarlint-report.xml
+          path: sonarlint.xml
