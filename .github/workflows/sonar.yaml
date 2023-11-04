@@ -2,7 +2,7 @@ name: SonarLint
 
 on:
   push:
-    branches: [sonarlint]
+    branches: [main]
   pull_request:
     types: [opened, synchronize, reopened]
 
